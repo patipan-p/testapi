@@ -1,8 +1,11 @@
+FROM maven:3.8.5-openjdk-17 as build
+COPY . .
+RUN mnv clean package -DskipTests
+
 FROM openjdk:17-alpine
-EXPOSE 8080
-#ENV JDBC_URL=jdbc:postgresql://172.17.0.2:5432/testdatabase
 WORKDIR /app
-COPY target/myApi.jar app.jar
+COPY --from=build target/myApi.jar app.jar
+EXPOSE 8080
 CMD java -jar app.jar
 
 
